@@ -1,0 +1,125 @@
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --border: #e2e8f0;
+  --sidebar-bg: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --card-bg: #ffffff;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --border: #334155;
+  --sidebar-bg: #1e293b;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --card-bg: #1e293b;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.2s, color 0.2s;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select {
+  font-family: inherit;
+}
+
+/* Map full height */
+#__next,
+main {
+  height: 100vh;
+  width: 100%;
+}
+
+/* Google Map container */
+.gm-style iframe + div {
+  border: none !important;
+}
+
+/* Autocomplete dropdown */
+.pac-container {
+  z-index: 10000 !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.pac-item {
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.pac-item-selected {
+  background: var(--accent);
+  color: white;
+}
+
+.pac-icon {
+  display: none;
+}
+
+/* Responsive: stack map and panel on small screens */
+@media (max-width: 768px) {
+  .campus-main {
+    flex-direction: column;
+  }
+  .campus-main .side-panel {
+    max-width: 100%;
+    max-height: 45vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+  .campus-main .map-wrap {
+    min-height: 55vh;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

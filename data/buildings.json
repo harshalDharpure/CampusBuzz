@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Main Library",
+    "lat": 18.5204,
+    "lng": 73.8567,
+    "category": "library",
+    "description": "Central campus library with extensive collections, reading halls, and digital resources.",
+    "facilities": ["wifi", "study room", "printing", "quiet zone"],
+    "photo": "/buildings/library.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Student Cafeteria",
+    "lat": 18.5198,
+    "lng": 73.8572,
+    "category": "cafeteria",
+    "description": "Main dining hall serving breakfast, lunch, and snacks. Seating for 500+.",
+    "facilities": ["wifi", "ac", "indoor seating"],
+    "photo": "/buildings/cafeteria.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Computer Science Lab",
+    "lat": 18.521,
+    "lng": 73.8558,
+    "category": "labs",
+    "description": "Computer labs with high-end workstations and software for CS students.",
+    "facilities": ["wifi", "ac", "projector", "printing"],
+    "photo": "/buildings/cs-lab.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Chemistry Lab Block",
+    "lat": 18.5195,
+    "lng": 73.8562,
+    "category": "labs",
+    "description": "Chemistry and physics laboratories with modern equipment.",
+    "facilities": ["ac", "safety equipment", "storage"],
+    "photo": "/buildings/chem-lab.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Boys Hostel A",
+    "lat": 18.5188,
+    "lng": 73.858,
+    "category": "hostel",
+    "description": "Boys hostel with single and shared rooms. Common room and study area.",
+    "facilities": ["wifi", "common room", "laundry", "security"],
+    "photo": "/buildings/hostel-a.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Girls Hostel B",
+    "lat": 18.5185,
+    "lng": 73.8575,
+    "category": "hostel",
+    "description": "Girls hostel with secure premises and 24/7 wardens.",
+    "facilities": ["wifi", "common room", "laundry", "security"],
+    "photo": "/buildings/hostel-b.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Main Parking Lot",
+    "lat": 18.5178,
+    "lng": 73.8568,
+    "category": "parking",
+    "description": "Primary parking area for two-wheelers and cars. Near main gate.",
+    "facilities": ["covered", "security", "ev charging"],
+    "photo": "/buildings/parking.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Admin Block",
+    "lat": 18.5208,
+    "lng": 73.8578,
+    "category": "admin office",
+    "description": "Administrative offices, registrar, accounts, and student services.",
+    "facilities": ["wifi", "ac", "reception", "documentation"],
+    "photo": "/buildings/admin.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Central Auditorium",
+    "lat": 18.5202,
+    "lng": 73.856,
+    "category": "admin office",
+    "description": "Main auditorium for events, seminars, and examinations.",
+    "facilities": ["ac", "projector", "stage", "seating 800"],
+    "photo": "/buildings/auditorium.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Sports Complex",
+    "lat": 18.519,
+    "lng": 73.8585,
+    "category": "cafeteria",
+    "description": "Indoor sports facility with gym, courts, and swimming pool.",
+    "facilities": ["gym", "basketball", "badminton", "pool"],
+    "photo": "/buildings/sports.jpg"
+  }
+]
