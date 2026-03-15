@@ -8,7 +8,6 @@ import CampusMap from "./Map";
 import SearchBox from "./SearchBox";
 import BuildingSidePanel from "./BuildingSidePanel";
 import type { Building, MapCenter } from "@/lib/types";
-import { getBuildings } from "@/lib/buildingsStore";
 import buildingsData from "@/data/buildings.json";
 
 const DEFAULT_BUILDINGS: Building[] = buildingsData as Building[];
@@ -17,6 +16,7 @@ const DEFAULT_CENTER: MapCenter = { lat: 18.52, lng: 73.8567, zoom: 16 };
 export default function CampusNavigator() {
   const searchParams = useSearchParams();
   const [buildings, setBuildingsState] = useState<Building[]>(DEFAULT_BUILDINGS);
+  const [buildingsLoading, setBuildingsLoading] = useState(true);
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [origin, setOrigin] = useState<Building | null>(null);
   const [destination, setDestination] = useState<Building | null>(null);
@@ -29,7 +29,17 @@ export default function CampusNavigator() {
   const [routeDuration, setRouteDuration] = useState<string | null>(null);
 
   useEffect(() => {
-    setBuildingsState(getBuildings(DEFAULT_BUILDINGS));
+    let cancelled = false;
+    fetch("/api/buildings")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: Building[]) => {
+        if (!cancelled && Array.isArray(data) && data.length > 0) setBuildingsState(data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setBuildingsLoading(false);
+      });
+    return () => { cancelled = true; };
   }, []);
 
   const campusCenter = useMemo(() => {

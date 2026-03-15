@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import type { Building, BuildingCategory } from "@/lib/types";
-import { getBuildings, setBuildings, clearBuildings } from "@/lib/buildingsStore";
 import defaultBuildingsData from "@/data/buildings.json";
 
 const DEFAULT_BUILDINGS: Building[] = defaultBuildingsData as Building[];
@@ -23,9 +22,17 @@ function nextId(buildings: Building[]): number {
 export default function AdminPage() {
   const [buildings, setBuildingsState] = useState<Building[]>([]);
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setBuildingsState(getBuildings(DEFAULT_BUILDINGS));
+    fetch("/api/buildings")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: Building[]) => {
+        setBuildingsState(Array.isArray(data) && data.length > 0 ? data : [...DEFAULT_BUILDINGS]);
+      })
+      .catch(() => setBuildingsState([...DEFAULT_BUILDINGS]))
+      .finally(() => setLoading(false));
   }, []);
 
   const updateBuilding = useCallback((index: number, updates: Partial<Building>) => {
@@ -74,10 +81,25 @@ export default function AdminPage() {
     [updateBuilding]
   );
 
-  const saveAll = useCallback(() => {
-    setBuildings(buildings);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  const saveAll = useCallback(async () => {
+    setError(null);
+    try {
+      const res = await fetch("/api/buildings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ buildings }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to save");
+      }
+      const data = await res.json();
+      if (Array.isArray(data)) setBuildingsState(data);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to save to database");
+    }
   }, [buildings]);
 
   const exportJson = useCallback(() => {
@@ -91,46 +113,82 @@ export default function AdminPage() {
     URL.revokeObjectURL(a.href);
   }, [buildings]);
 
-  const importJson = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const parsed = JSON.parse(reader.result as string);
-        const list = Array.isArray(parsed) ? parsed : [];
-        const withIds = list.map((b: Record<string, unknown>, i: number) => ({
-          id: typeof b.id === "number" ? b.id : i + 1,
-          name: String(b.name ?? "Building"),
-          lat: Number(b.lat ?? 18.52),
-          lng: Number(b.lng ?? 73.8567),
-          category: (CATEGORIES.includes(b.category as BuildingCategory) ? b.category : "admin office") as BuildingCategory,
-          description: String(b.description ?? ""),
-          facilities: Array.isArray(b.facilities) ? b.facilities.map(String) : [],
-          photo: b.photo != null ? String(b.photo) : undefined,
-        }));
-        setBuildingsState(withIds);
-        setBuildings(withIds);
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2000);
-      } catch {
-        alert("Invalid JSON file.");
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  }, []);
+  const importJson = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const parsed = JSON.parse(reader.result as string);
+          const list = Array.isArray(parsed) ? parsed : [];
+          const withIds = list.map((b: Record<string, unknown>, i: number) => ({
+            id: typeof b.id === "number" ? b.id : i + 1,
+            name: String(b.name ?? "Building"),
+            lat: Number(b.lat ?? 18.52),
+            lng: Number(b.lng ?? 73.8567),
+            category: (CATEGORIES.includes(b.category as BuildingCategory) ? b.category : "admin office") as BuildingCategory,
+            description: String(b.description ?? ""),
+            facilities: Array.isArray(b.facilities) ? b.facilities.map(String) : [],
+            photo: b.photo != null ? String(b.photo) : undefined,
+          }));
+          setBuildingsState(withIds);
+          setError(null);
+          const res = await fetch("/api/buildings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ buildings: withIds }),
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error || "Failed to save");
+          }
+          const data = await res.json();
+          if (Array.isArray(data)) setBuildingsState(data);
+          setSaved(true);
+          setTimeout(() => setSaved(false), 2000);
+        } catch (err) {
+          alert(err instanceof Error ? err.message : "Invalid JSON file.");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    },
+    []
+  );
 
-  const resetToDefault = useCallback(() => {
-    if (confirm("Replace all buildings with the default list?")) {
-      clearBuildings();
-      setBuildingsState(DEFAULT_BUILDINGS);
-      setSaved(false);
+  const resetToDefault = useCallback(async () => {
+    if (!confirm("Replace all buildings with the default list?")) return;
+    setError(null);
+    try {
+      const res = await fetch("/api/buildings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ buildings: DEFAULT_BUILDINGS }),
+      });
+      if (!res.ok) throw new Error("Failed to reset");
+      const data = await res.json();
+      if (Array.isArray(data)) setBuildingsState(data);
+      else setBuildingsState([...DEFAULT_BUILDINGS]);
+    } catch {
+      setError("Failed to reset");
     }
   }, []);
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-primary)", color: "var(--text-primary)" }}>
+      {error && (
+        <div
+          style={{
+            padding: "12px 20px",
+            background: "#fef2f2",
+            color: "#dc2626",
+            fontSize: "14px",
+          }}
+        >
+          {error}
+        </div>
+      )}
       <header
         style={{
           padding: "12px 20px",
@@ -218,6 +276,7 @@ export default function AdminPage() {
       </header>
 
       <main style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+        {loading && <p style={{ marginBottom: "16px", color: "var(--text-secondary)" }}>Loading buildings…</p>}
         <p style={{ marginBottom: "16px", color: "var(--text-secondary)", fontSize: "14px" }}>
           Set the latitude and longitude for each building. Use <strong>&quot;Use my location&quot;</strong> when you
           are at a building to fill its coordinates. Then go to the map and use your current location to get directions

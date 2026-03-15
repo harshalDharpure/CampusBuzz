@@ -4,7 +4,7 @@ A production-ready campus navigation web app for students, staff, and visitors. 
 
 ## Features
 
-- **Interactive campus map** — Buildings from JSON, markers, clustering
+- **Interactive campus map** — Buildings from database, markers, clustering
 - **Search** — Autocomplete-style search; map zooms to selected building
 - **Route navigation** — Set start/destination; walking directions with distance and time
 - **Live location** — Browser Geolocation API; your position on the map
@@ -39,6 +39,18 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 Optional: Geocoding API if you use place search beyond the built-in building list.
 
 Get an API key: [Google Cloud Console](https://console.cloud.google.com/google/maps-apis/).
+
+### 3. Database (Supabase) — for Admin add/edit
+
+Buildings are stored in **Supabase** (PostgreSQL). Without it, the app uses default sample data and Admin cannot persist changes.
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. In the dashboard: **SQL Editor** → New query → paste and run the contents of `supabase/schema.sql` to create the `buildings` table.
+3. Go to **Settings → API**. Copy:
+   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+   - **service_role** key (under "Project API keys") → `SUPABASE_SERVICE_ROLE_KEY`
+4. Add both to `.env.local`. Restart the dev server.
+5. Open **Admin** in the app and click **Reset to default** to seed the table with sample buildings (or add your own and click **Save all**).
 
 ---
 
