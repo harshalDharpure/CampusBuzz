@@ -1,4 +1,4 @@
-export const DEFAULT_CENTER = { lat: 18.52, lng: 73.8567 };
+export const DEFAULT_CENTER = { lat: 20.9993, lng: 77.7578 };
 export const DEFAULT_ZOOM = 16;
 
 export function getDistanceFromLatLonInKm(

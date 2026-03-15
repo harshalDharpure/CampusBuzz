@@ -50,8 +50,8 @@ export default function AdminPage() {
       {
         id: nextId(buildings),
         name: "New Building",
-        lat: 18.52,
-        lng: 73.8567,
+        lat: 20.9993,
+        lng: 77.7578,
         category: "admin office",
         description: "",
         facilities: [],
@@ -125,8 +125,8 @@ export default function AdminPage() {
           const withIds = list.map((b: Record<string, unknown>, i: number) => ({
             id: typeof b.id === "number" ? b.id : i + 1,
             name: String(b.name ?? "Building"),
-            lat: Number(b.lat ?? 18.52),
-            lng: Number(b.lng ?? 73.8567),
+            lat: Number(b.lat ?? 20.9993),
+            lng: Number(b.lng ?? 77.7578),
             category: (CATEGORIES.includes(b.category as BuildingCategory) ? b.category : "admin office") as BuildingCategory,
             description: String(b.description ?? ""),
             facilities: Array.isArray(b.facilities) ? b.facilities.map(String) : [],

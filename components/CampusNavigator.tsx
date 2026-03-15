@@ -11,7 +11,7 @@ import type { Building, MapCenter } from "@/lib/types";
 import buildingsData from "@/data/buildings.json";
 
 const DEFAULT_BUILDINGS: Building[] = buildingsData as Building[];
-const DEFAULT_CENTER: MapCenter = { lat: 18.52, lng: 73.8567, zoom: 16 };
+const DEFAULT_CENTER: MapCenter = { lat: 20.9993, lng: 77.7578, zoom: 16 };
 
 export default function CampusNavigator() {
   const searchParams = useSearchParams();
@@ -249,7 +249,7 @@ export default function CampusNavigator() {
             marginRight: "12px",
           }}
         >
-          CampusBaze
+          PR Pote College, Amravati
         </h1>
         <SearchBox
           buildings={buildings}

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Campus Navigation System | CampusBaze",
-  description: "Navigate campus buildings with an interactive map, search, and directions.",
+  title: "Campus Navigation | PR Pote College of Engineering and Management, Amravati",
+  description: "Navigate PR Pote College campus with an interactive map, search, and directions.",
 };
 
 export default function RootLayout({
